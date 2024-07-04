@@ -24,11 +24,9 @@ const BottomTabNavigator = () => {
 
           return <Ionicons name={iconName} size={size} color={color} />;
         },
+        tabBarActiveTintColor: "green",
+        tabBarInactiveTintColor: "gray",
       })}
-      tabBarOptions={{
-        activeTintColor: "green",
-        inactiveTIntColor: "gray",
-      }}
     >
       <Tab.Screen name="Home" component={HomeScreen} />
       <Tab.Screen name="Scan" component={ScanScreen} />
