@@ -1,7 +1,16 @@
 import React, { useState } from "react";
-import { View, Text, StyleSheet, TouchableOpacity, Image } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  Image,
+  Alert,
+} from "react-native";
 import * as ImagePicker from "expo-image-picker";
 import { useNavigation } from "@react-navigation/native";
+
+const API_URL = "http://10.0.2.2:8000";
 
 const ScanScreen = () => {
   const [imageUri, setImageUri] = useState(null);
@@ -19,25 +28,38 @@ const ScanScreen = () => {
     if (!result.canceled) {
       setImageUri(result.assets[0].uri);
       setAnalyzing(true);
-      // Simulating an API call
-      setTimeout(() => {
-        navigation.navigate("Results", {
-          result: {
-            success: true,
-            title: "Healthy Pig Detected",
-            description:
-              "The scanned pig appears to be in good health with no visible signs of disease or infection.",
-            confidence: 95,
-            processingTime: 1200,
-            recommendations: [
-              "Continue with regular feeding schedule",
-              "Maintain a clean and comfortable living environment",
-              "Consider scheduling a routine veterinary check-up in the next 2-3 weeks",
-            ],
-          },
-        });
-        setAnalyzing(false);
-      }, 2000);
+      await analyzeImage(result.assets[0].uri);
+    }
+  };
+
+  const analyzeImage = async (uri) => {
+    const formData = new FormData();
+    formData.append("file", {
+      uri: uri,
+      type: "image/jpeg",
+      name: "image.jpg",
+    });
+
+    try {
+      const response = await fetch(`${API_URL}/predict`, {
+        method: "POST",
+        body: formData,
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const result = await response.json();
+      navigation.navigate("Results", { result });
+    } catch (error) {
+      console.error("Error analyzing image:", error);
+      Alert.alert("Error", "Failed to analyze the image. Please try again.");
+    } finally {
+      setAnalyzing(false);
     }
   };
 

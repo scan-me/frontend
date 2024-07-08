@@ -9,20 +9,20 @@ import {
 import { useNavigation } from "@react-navigation/native";
 
 const ResultScreen = ({ route }) => {
-  //   const { result } = route.params;
-  const result = {
-    success: true,
-    title: "Healthy Pig Detected",
-    description:
-      "The scanned pig appears to be in good health with no visible signs of disease or infection.",
-    confidence: 95,
-    processingTime: 1200,
-    recommendations: [
-      "Continue with regular feeding schedule",
-      "Maintain a clean and comfortable living environment",
-      "Consider scheduling a routine veterinary check-up in the next 2-3 weeks",
-    ],
-  };
+    const { result } = route.params;
+  // const result = {
+  //   success: true,
+  //   title: "Healthy Pig Detected",
+  //   description:
+  //     "The scanned pig appears to be in good health with no visible signs of disease or infection.",
+  //   confidence: 95,
+  //   processingTime: 1200,
+  //   recommendations: [
+  //     "Continue with regular feeding schedule",
+  //     "Maintain a clean and comfortable living environment",
+  //     "Consider scheduling a routine veterinary check-up in the next 2-3 weeks",
+  //   ],
+  // };
 
   const navigation = useNavigation();
 
@@ -63,7 +63,7 @@ const ResultScreen = ({ route }) => {
 
       <View style={styles.recommendationsContainer}>
         <Text style={styles.recommendationsTitle}>Recommendations</Text>
-        <Text style={styles.recommendationItem}>
+        {/* <Text style={styles.recommendationItem}>
           • {result.recommendations[0]}
         </Text>
         <Text style={styles.recommendationItem}>
@@ -71,7 +71,12 @@ const ResultScreen = ({ route }) => {
         </Text>
         <Text style={styles.recommendationItem}>
           • {result.recommendations[2]}
-        </Text>
+        </Text> */}
+        {result.recommendations.map((recommendation, index) => (
+          <Text key={index} style={styles.recommendationItem}>
+            • {recommendation}
+          </Text>
+        ))}
       </View>
 
       <TouchableOpacity style={styles.actionButton}>
